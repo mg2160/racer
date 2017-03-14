@@ -14,23 +14,29 @@ class Racer
 		self.collection.find(prototype).sort(sort).skip(skip).limit(limit)
 	end
 
+	#def new (params)
+	#	self.initialize(params)
+	#end
+
 	def initialize(params)
+		if params[:id].nil?
+			@id=params[:_id].to_s
+		elsif params[:_id].nil?
+			@id=params[:id]
+		end	 
 		@number=params[:number]
 		@first_name=params[:first_name]
 		@last_name=params[:last_name]
 		@gender=params[:gender]
 		@group=params[:group]
 		@secs=params[:secs]
-		if params[:id].nil?
-			@id=params[:_id].to_s
-		elsif params[:_id].nil?
-			@id=params[:id]
-		end	 
 	end
 
 	def self.find id
-		result=self.collection.find(:id => id)
+		result=collection.find(_id: BSON.ObjectId(id)).first #BSON.ObjectId(id"as a string") for representation id as BSON::ObjectId
 		if result.nil?
+			return nil
+		else
 			return Racer.new(result)
 		end
 	end

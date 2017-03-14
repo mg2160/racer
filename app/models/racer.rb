@@ -43,7 +43,18 @@ class Racer
 
 	def save
 		result=self.class.collection.insert_one(:number=>@number ,:first_name=>@first_name ,:last_name=>@last_name ,:gender=>@gender ,:group=>@group ,:secs=>@secs)
-		@id=result.inserted_id
+		@id=result.inserted_id #gets the id of the last inserted document
+	end
+
+	def update(params)
+		@number=params[:number]
+		@first_name=params[:first_name]
+		@last_name=params[:last_name]
+		@gender=params[:gender]
+		@group=params[:group]
+		@secs=params[:secs]
+		params.slice(:number, :first_name, :last_name, :gender, :group, :secs)
+		self.class.collection.find(:number=>@number).update_one(params)
 	end
 
 end
